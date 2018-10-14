@@ -1,3 +1,4 @@
+
 sbit LCD_RS at RC6_bit;
 sbit LCD_EN at RC7_bit;
 sbit LCD_D4 at RB4_bit;
@@ -22,6 +23,12 @@ sbit SIG at RA1_bit;
 sbit ADJ at RA0_bit;  
 sbit SIG_Direction at TRISA1_bit;
 sbit ADJ_Direction at TRISA0_bit;            
+
+#include"Fuzzy.h"
+#include"FuzzyComposition.h"
+#include"FuzzyRuleAntecedent.h"
+#include"FuzzyRuleConsequent.h"
+#include"pic16f877.h"
 
 const unsigned int C1 = 205;  
 const unsigned int C2 = 367;  
@@ -260,7 +267,7 @@ void DisplayMeasurements(unsigned short rownumber){
     Rh[1] = Rh_res % 1000 / 100 + 48;             
     Rh[3] = Rh_res % 100 / 10 + 48;               
 
-	La[0] = La_res % 10000 / 1000 + 48;           
+    La[0] = La_res % 10000 / 1000 + 48;           
     La[1] = La_res % 1000 / 100 + 48;             
     La[3] = La_res % 100 / 10 + 48;
 
@@ -279,10 +286,28 @@ void DisplayMeasurements(unsigned short rownumber){
 
     Lcd_Out(rownumber, 8, Rh);
 
-	Lcd_Out(rownumber, 12, La)
+    Lcd_Out(rownumber, 12, La);
 
 }
 
+void output_transmission()
+{
+	if (Tmp[0] == '0')                           
+      		HT1 = 0;                              
+    	if (Tmp[0] == ' ' && Tmp[1] == '0')          
+      		HT1 = 1;
+	
+	if (Rh[0] == '0')                           
+      		WS1 = 0;                              
+    	if (Rh[0] == ' ' && Rh[1] == '0')          
+      		WS1 = 1;
+	
+	if (La[0] == '0')                           
+      		LT = 0;                              
+    	if (La[0] == ' ' && Tmp[1] == '0')          
+      		LT = 1;
+
+}
 void main()
 {
   CMCON = 0x07;   
@@ -310,7 +335,7 @@ void main()
     SOrh = Measure(0x05);            
     SCL1_Direction = 1;               
     DisplayMeasurements(1);
-
+    Delay_ms(2000);                  
      
     Select = 2;
     STartUpDelay();
@@ -320,7 +345,17 @@ void main()
     SOrh = Measure(0x05);            
     SIG_Direction = 1;              
     DisplayMeasurements(2);
-    Delay_ms(2000);                  
+    Delay_ms(2000);  
+	  
+    Select = 3;
+    STartUpDelay();
+    ADJ_Direction = 0;              
+    SOt = Measure(0x03);             
+     
+    SOrh = Measure(0x05);            
+    ADJ_Direction = 1;               
+    DisplayMeasurements(1);
+    Delay_ms(2000);
 	}
 }
  
