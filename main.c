@@ -22,7 +22,14 @@ sbit SCL1_Direction at TRISA3_bit;
 sbit SIG at RA1_bit;              
 sbit ADJ at RA0_bit;  
 sbit SIG_Direction at TRISA1_bit;
-sbit ADJ_Direction at TRISA0_bit;            
+sbit ADJ_Direction at TRISA0_bit;   
+
+sbit WS1 at RC0_bit;              
+sbit HT1 at RC1_bit;
+sbit LA at RC2_bit;
+sbit WS1_Direction at TRISC0_bit;
+sbit HT1_Direction at TRISC1_bit; 
+sbit LA_Direction at TRISC2_bit; 
 
 #include"Fuzzy.h"
 #include"FuzzyComposition.h"
